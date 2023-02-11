@@ -1,89 +1,44 @@
+package wGame;
 
-import java.util.Random;
+class Card implements Comparable<Card> {
+    private Rank rank;
+    private Suit suit;
 
-class Card {
-  private String suit;
-  private int cardNumber;
+    enum Rank {
+	    //asigns the rank to each card ace being lowest
+        ACE(1), TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6),
+        SEVEN(7), EIGHT(8), NINE(9), TEN(10), JACK(11), QUEEN(12),
+        KING(13);
 
-  public Card(String suit, int cardNumber) {
-    this.suit = suit;
-    this.cardNumber = cardNumber;
-  }
+        private final int value;
 
-  public String getSuit() {
-    return this.suit;
-  }
-
-  public int getCardNumber() {
-    return this.cardNumber;
-  }
-}
-/*
-class Deck {
-  private int deckSize;
-  private Card[] makeDeck;
-  private Card[][] gameDeck;
-
-  public Deck(int deckSize) {
-    this.deckSize = deckSize;
-    this.gameDeck = new Card[deckSize][52];
-  }
-
-  public void createDeck() {
-    for (int i = 0; i < this.deckSize; i++) {
-      this.makeDeck = new Card[52];
-      int index = 0;
-      String[] suits = {"Hearts", "Diamonds", "Spades", "Clubs"};
-
-      for (String suit : suits) {
-        for (int j = 1; j <= 13; j++) {
-          this.makeDeck[index] = new Card(suit, j);
-          index++;
+        private Rank(int value) {
+            this.value = value;
         }
-      }
 
-      shuffleDeck();
-      this.gameDeck[i] = this.makeDeck;
-    }
-  }
-
-  private void shuffleDeck() {
-    Random random = new Random();
-    for (int i = this.makeDeck.length - 1; i > 0; i--) {
-      int index = random.nextInt(i + 1);
-      Card temp = this.makeDeck[index];
-      this.makeDeck[index] = this.makeDeck[i];
-      this.makeDeck[i] = temp;
-    }
-  }
-
-  public Card[][] giveCards() {
-    int counter = 0;
-    for (int i = 0; i < this.deckSize; i++) {
-      for (int j = 0; j < 52; j++) {
-        if (counter % 2 == 0) {
-          this.gameDeck[i][j].getSuit();
-        } else {
-          this.gameDeck[i][j].getSuit();
+        public int getValue() {
+            return value;
         }
-        counter++;
-      }
     }
-    return this.gameDeck;
-  }
-}
-*/
-/*
-public static void main(String[] args) {
-  Deck gameDeck = new Deck(2);
-  gameDeck.createDeck();
-
-  Card[][] allCards = gameDeck.giveCards();
-
-  for (int i = 0; i < allCards.length; i++) {
-    for (int j = 0; j < allCards[i].length; j++) {
-      System.out.println("Deck: " + (i + 1) + " Card: " + (j + 1) + " Suit: " + allCards[i][j].getSuit() + " Number: " + allCards[i][j].getCardNumber());
+//we dont want these to change
+    enum Suit {
+        HEARTS, DIAMONDS, SPADES, CLUBS
     }
-  }
+
+    Rank getRank() {
+        return rank;
+    }
+
+    Card(Rank rank, Suit suit) {
+        this.rank = rank;
+        this.suit = suit;
+    }
+
+    public int compareTo(Card other) {
+        return Integer.compare(rank.getValue(), other.getRank().getValue());
+    }
+
+    public String toString() {
+        return String.format("%s of %s", rank, suit);
+    }
 }
-*/

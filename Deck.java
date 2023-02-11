@@ -1,57 +1,61 @@
-
-import java.util.Random;
+package wGame;
+import wGame.Card.Rank;
+import wGame.Card.Suit;
+import java.security.SecureRandom;
 
 class Deck {
-  private int deckSize;
-  private Card[] makeDeck;
-  private Card[][] gameDeck;
+    private static final int NUM_CARDS_IN_DECK = 52;
 
-  public Deck(int deckSize) {
-    this.deckSize = deckSize;
-    this.gameDeck = new Card[deckSize][52];
-  }
+    private static final SecureRandom rng = new SecureRandom();
 
-  public void createDeck() {
-    for (int i = 0; i < this.deckSize; i++) {
-      this.makeDeck = new Card[52];
-      int index = 0;
-      String[] suits = {"Hearts", "Diamonds", "Spades", "Clubs"};
+    private final Card[] cards = new Card[NUM_CARDS_IN_DECK];
 
-      for (String suit : suits) {
-        for (int j = 1; j <= 13; j++) {
-          this.makeDeck[index] = new Card(suit, j);
-          index++;
+    // where the top card is at relative to program
+    private int indexOfTopCard = 0;
+
+    Deck() {
+        createCards();
+        shuffleCards();
+    }
+
+    private void createCards() {
+        int numCardsCreated = 0;
+
+        for (Rank rank : Rank.values()) {
+            for (Suit suit : Suit.values()) {
+                cards[numCardsCreated] = new Card(rank, suit);
+                ++numCardsCreated;
+            }
         }
-      }
-
-      shuffleDeck();
-      this.gameDeck[i] = this.makeDeck;
     }
-  }
+	//Shuffle!!
+    private void shuffleCards() {
+        int ranI;
+        Card temp;
 
-  private void shuffleDeck() {
-    Random random = new Random();
-    for (int i = this.makeDeck.length - 1; i > 0; i--) {
-      int index = random.nextInt(i + 1);
-      Card temp = this.makeDeck[index];
-      this.makeDeck[index] = this.makeDeck[i];
-      this.makeDeck[i] = temp;
-    }
-  }
-
-  public Card[][] giveCards() {
-    int counter = 0;
-    for (int i = 0; i < this.deckSize; i++) {
-      for (int j = 0; j < 52; j++) {
-        if (counter % 2 == 0) {
-          this.gameDeck[i][j].getSuit();
-        } else {
-          this.gameDeck[i][j].getSuit();
+        try {
+            for (int i = 0; i < NUM_CARDS_IN_DECK; ++i) {
+                temp = cards[i];
+                ranI = rng.nextInt(NUM_CARDS_IN_DECK);
+                cards[i] = cards[ranI];
+                cards[ranI] = temp;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        counter++;
-      }
     }
-    return this.gameDeck;
-  }
+//next Card :p
+    Card getNextCard() throws Exception {
+        Card card;
+
+        try {
+            card = cards[indexOfTopCard];
+            ++indexOfTopCard;
+        } catch (ArrayIndexOutOfBoundsException e) {
+		//exception case :P
+            throw new Exception("Cards have been used up.");
+        }
+
+        return card;
+    }
 }
-
